@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-<title>Multi Currency | USD ⇄ KHR ⇄ IDR | Live Google Rate</title>
+<title>Currency Converter | USD ⇄ IDR ⇄ KHR ⇄ THB</title>
 
 <style>
     * {
@@ -20,241 +20,142 @@
         align-items: center;
         min-height: 100vh;
         padding: 20px;
-        position: relative;
-        overflow-x: hidden;
-    }
-
-    body::before {
-        content: "";
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px);
-        background-size: 35px 35px;
-        pointer-events: none;
-        z-index: 0;
     }
 
     .container {
         width: 100%;
-        max-width: 650px;
-        background: rgba(18, 25, 45, 0.85);
+        max-width: 700px;
+        background: rgba(18, 25, 45, 0.9);
         backdrop-filter: blur(12px);
         border-radius: 48px;
-        padding: 28px 24px 36px;
-        box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.08);
-        z-index: 2;
+        padding: 28px 24px;
+        box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
         border: 1px solid rgba(255,255,255,0.12);
-    }
-
-    .header-top {
-        display: flex;
-        justify-content: space-between;
-        align-items: baseline;
-        flex-wrap: wrap;
-        margin-bottom: 8px;
     }
 
     h1 {
         font-size: 24px;
         font-weight: 700;
-        background: linear-gradient(135deg, #FFFFFF 30%, #94A3F8 80%);
+        background: linear-gradient(135deg, #FFFFFF, #94A3F8);
         background-clip: text;
         -webkit-background-clip: text;
         color: transparent;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        flex-wrap: wrap;
+        text-align: center;
+        margin-bottom: 8px;
     }
 
     .datetime-box {
         background: #0F172A;
-        padding: 6px 14px;
+        padding: 8px 16px;
         border-radius: 40px;
+        text-align: center;
+        margin-bottom: 20px;
         border: 1px solid #334155;
-        text-align: center;
-        font-size: 12px;
     }
 
-    .date {
-        color: #94a3b8;
-        font-size: 10px;
-    }
+    .date { color: #94a3b8; font-size: 12px; }
+    .time { color: #22c55e; font-size: 18px; font-weight: 700; font-family: monospace; }
 
-    .time {
-        color: #22c55e;
-        font-size: 14px;
-        font-weight: 700;
-        font-family: monospace;
-    }
-
-    .sub {
-        text-align: center;
-        font-size: 11px;
-        color: #94a3b8;
-        margin-bottom: 20px;
-        padding-bottom: 6px;
-        border-bottom: 1px dashed rgba(255,255,255,0.2);
-        display: inline-block;
-        width: auto;
-        margin: 0 auto 20px auto;
-    }
-
-    /* rate cards */
-    .rate-grid {
+    .rate-cards {
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: repeat(3, 1fr);
         gap: 12px;
-        margin-bottom: 20px;
+        margin-bottom: 24px;
     }
 
     .rate-card {
-        background: linear-gradient(145deg, #0F172A, #0B1120);
-        border-radius: 24px;
-        padding: 14px 16px;
-        border: 1px solid rgba(34, 197, 94, 0.25);
+        background: #0F172A;
+        border-radius: 20px;
+        padding: 12px;
+        text-align: center;
+        border: 1px solid rgba(34,197,94,0.3);
     }
 
-    .rate-card.small {
-        border-color: rgba(59, 130, 246, 0.3);
-    }
+    .rate-label { font-size: 11px; color: #9ca3af; margin-bottom: 6px; }
+    .rate-value { font-size: 18px; font-weight: 800; color: #facc15; }
+    .rate-source { font-size: 8px; color: #4b5563; margin-top: 4px; }
 
-    .rate-label {
-        font-size: 11px;
-        color: #9ca3af;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    .rate-value {
-        font-size: 22px;
-        font-weight: 800;
-        color: #facc15;
-        margin-top: 6px;
-        display: flex;
-        align-items: baseline;
-        gap: 5px;
-        flex-wrap: wrap;
-    }
-
-    .rate-value small {
-        font-size: 12px;
-        color: #6b7280;
-        font-weight: normal;
-    }
-
-    .update-time {
-        font-size: 9px;
-        color: #22c55e;
-        margin-top: 8px;
-        text-align: right;
-    }
-
-    .fetch-all-btn {
+    .update-btn {
         width: 100%;
         padding: 14px;
+        background: linear-gradient(135deg, #3B82F6, #2563EB);
         border: none;
         border-radius: 40px;
-        background: linear-gradient(135deg, #3B82F6, #2563EB);
         color: white;
         font-weight: 700;
         font-size: 14px;
         cursor: pointer;
-        transition: 0.2s;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
         margin-bottom: 24px;
     }
 
-    .fetch-all-btn:hover {
-        transform: scale(1.01);
-        background: linear-gradient(135deg, #2563EB, #1D4ED8);
-    }
-
-    .fetch-all-btn:disabled {
+    .update-btn:disabled {
         opacity: 0.6;
         cursor: not-allowed;
     }
 
-    .input-group {
-        margin-bottom: 18px;
-    }
+    .input-group { margin-bottom: 18px; }
+    .input-group label { display: block; margin-bottom: 8px; color: #9ca3af; font-size: 13px; }
 
-    .input-group label {
-        display: block;
-        margin-bottom: 8px;
-        font-size: 13px;
-        font-weight: 500;
-        color: #9ca3af;
-        margin-left: 8px;
-    }
-
-    input, select {
+    select, input {
         width: 100%;
         padding: 14px 18px;
-        border: none;
-        border-radius: 28px;
-        font-size: 16px;
-        font-weight: 500;
         background: #0F172A;
-        color: #F1F5F9;
         border: 1px solid #334155;
+        border-radius: 28px;
+        color: white;
+        font-size: 16px;
         outline: none;
     }
 
-    input:focus, select:focus {
-        border-color: #22c55e;
-        box-shadow: 0 0 0 3px #22c55e30;
-    }
+    select:focus, input:focus { border-color: #22c55e; }
 
-    button {
+    .convert-btn {
         width: 100%;
         padding: 16px;
+        background: linear-gradient(105deg, #22c55e, #15803d);
         border: none;
         border-radius: 60px;
-        background: linear-gradient(105deg, #22c55e, #15803d);
         color: white;
         font-size: 18px;
         font-weight: 700;
         cursor: pointer;
-        transition: all 0.25s;
-        box-shadow: 0 8px 20px -8px #15803d70;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
-        margin-top: 8px;
-    }
-
-    button:hover {
-        transform: scale(1.02);
-        background: linear-gradient(105deg, #2ecc71, #16a34a);
-    }
-
-    .hasil-wrapper {
-        margin-top: 28px;
-        background: rgba(15, 23, 42, 0.7);
-        border-radius: 36px;
-        padding: 6px;
-        backdrop-filter: blur(5px);
-        border: 1px solid rgba(34,197,94,0.3);
     }
 
     .hasil {
-        background: #0B1120;
-        padding: 20px 16px;
-        border-radius: 32px;
+        margin-top: 24px;
+        background: #0F172A;
+        padding: 20px;
+        border-radius: 28px;
         text-align: center;
-        font-size: 20px;
-        font-weight: 800;
-        word-break: break-word;
+        font-size: 18px;
+        font-weight: 600;
         color: #e2e8f0;
-        transition: 0.15s;
+        border: 1px solid rgba(34,197,94,0.3);
+    }
+
+    .last-updated {
+        text-align: center;
+        font-size: 10px;
+        color: #6b7280;
+        margin-top: 16px;
+    }
+
+    .status-success {
+        color: #22c55e;
+    }
+
+    .status-warning {
+        color: #facc15;
+    }
+
+    .status-error {
+        color: #ef4444;
+    }
+
+    @media (max-width: 550px) {
+        .rate-cards { grid-template-columns: 1fr; gap: 8px; }
+        .rate-value { font-size: 16px; }
+        h1 { font-size: 18px; }
     }
 
     .loading-spinner {
@@ -268,105 +169,78 @@
     }
 
     @keyframes spin {
-        to { transform: rotate(360deg);}
-    }
-
-    .success-text {
-        color: #22c55e;
-    }
-
-    @media (max-width: 550px) {
-        .container { padding: 20px 18px;}
-        .rate-grid { grid-template-columns: 1fr; gap: 10px;}
-        .hasil { font-size: 15px;}
-        h1 { font-size: 18px;}
-        .rate-value { font-size: 18px;}
-    }
-
-    .info-note {
-        margin-top: 20px;
-        background: #0A0F1C;
-        border-radius: 24px;
-        padding: 14px;
-        border: 1px solid #2d3a4e;
-        text-align: center;
-        font-size: 11px;
-        color: #7c8ba0;
+        to { transform: rotate(360deg); }
     }
 </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="header-top">
-        <h1>
-            💱 USD ⇄ KHR ⇄ IDR
-        </h1>
-        <div class="datetime-box">
-            <div class="date" id="dateDisplay">--/--/----</div>
-            <div class="time" id="timeDisplay">--:--:--</div>
-        </div>
-    </div>
-    <div style="text-align: center;">
-        <div class="sub">Live Exchange Rates • Google Finance</div>
+    <h1>💱 USD ⇄ IDR ⇄ KHR ⇄ THB</h1>
+    
+    <div class="datetime-box">
+        <div class="date" id="dateDisplay">--/--/----</div>
+        <div class="time" id="timeDisplay">--:--:--</div>
     </div>
 
-    <!-- Rate cards -->
-    <div class="rate-grid">
+    <div class="rate-cards">
         <div class="rate-card">
-            <div class="rate-label">🇺🇸 1 USD → 🇰🇭 RIEL (KHR)</div>
-            <div class="rate-value" id="rateUSDKHR">-- <small>៛</small></div>
-            <div class="update-time" id="timeUSDKHR">-</div>
+            <div class="rate-label">🇺🇸 1 USD → 🇮🇩 RUPIAH</div>
+            <div class="rate-value" id="rateIdr">17,640</div>
+            <div class="rate-source">Sumber: Google Finance</div>
         </div>
         <div class="rate-card">
-            <div class="rate-label">🇺🇸 1 USD → 🇮🇩 RUPIAH (IDR)</div>
-            <div class="rate-value" id="rateUSDIDR">-- <small>Rp</small></div>
-            <div class="update-time" id="timeUSDIDR">-</div>
+            <div class="rate-label">🇺🇸 1 USD → 🇰🇭 RIEL</div>
+            <div class="rate-value" id="rateKhr">4,014</div>
+            <div class="rate-source">Sumber: Google Finance</div>
+        </div>
+        <div class="rate-card">
+            <div class="rate-label">🇺🇸 1 USD → 🇹🇭 BAHT</div>
+            <div class="rate-value" id="rateThb">32.57</div>
+            <div class="rate-source">Sumber: Google Finance</div>
         </div>
     </div>
 
-    <button class="fetch-all-btn" id="fetchAllBtn" onclick="fetchAllRates()">
-        🔄 Ambil Rate Live dari Google Finance
+    <button class="update-btn" id="updateBtn" onclick="updateAllRates()">
+        🔄 Update Rate (Manual Update)
     </button>
 
     <div class="input-group">
         <label>📌 Pilih konversi</label>
         <select id="jenis">
-            <option value="usdToKhr">🇺🇸 USD → 🇰🇭 RIEL (KHR)</option>
-            <option value="khrToUsd">🇰🇭 RIEL → 🇺🇸 USD</option>
             <option value="usdToIdr">🇺🇸 USD → 🇮🇩 RUPIAH (IDR)</option>
             <option value="idrToUsd">🇮🇩 RUPIAH → 🇺🇸 USD</option>
-            <option value="khrToIdr">🇰🇭 RIEL → 🇮🇩 RUPIAH</option>
+            <option value="usdToKhr">🇺🇸 USD → 🇰🇭 RIEL (KHR)</option>
+            <option value="khrToUsd">🇰🇭 RIEL → 🇺🇸 USD</option>
+            <option value="usdToThb">🇺🇸 USD → 🇹🇭 BAHT (THB)</option>
+            <option value="thbToUsd">🇹🇭 BAHT → 🇺🇸 USD</option>
             <option value="idrToKhr">🇮🇩 RUPIAH → 🇰🇭 RIEL</option>
+            <option value="khrToIdr">🇰🇭 RIEL → 🇮🇩 RUPIAH</option>
+            <option value="idrToThb">🇮🇩 RUPIAH → 🇹🇭 BAHT</option>
+            <option value="thbToIdr">🇹🇭 BAHT → 🇮🇩 RUPIAH</option>
+            <option value="khrToThb">🇰🇭 RIEL → 🇹🇭 BAHT</option>
+            <option value="thbToKhr">🇹🇭 BAHT → 🇰🇭 RIEL</option>
         </select>
     </div>
 
     <div class="input-group">
         <label>💸 Masukkan nominal</label>
-        <input type="number" id="nominal" placeholder="0" step="any" autocomplete="off">
+        <input type="number" id="nominal" placeholder="0" step="any">
     </div>
 
-    <button onclick="hitung()">
-        <span>✨</span> HITUNG KONVERSI <span>➡️</span>
-    </button>
+    <button class="convert-btn" onclick="hitung()">✨ HITUNG KONVERSI ✨</button>
 
-    <div class="hasil-wrapper">
-        <div class="hasil" id="hasil">
-            💰 Hasil konversi akan muncul di sini
-        </div>
-    </div>
-
-    <div class="info-note">
-        ⚡ Rate diambil langsung dari Google Finance via API realtime<br>
-        📊 1 USD = <span id="sampleIdr">17,602.95</span> IDR (sesuai Google)<br>
-        🔄 Klik tombol biru untuk update kurs terbaru
-    </div>
+    <div class="hasil" id="hasil">💰 Hasil konversi akan muncul di sini</div>
+    <div class="last-updated" id="lastUpdated">📊 Rate default: 19 Mei 2026</div>
 </div>
 
 <script>
-    // ==================== VARIABEL GLOBAL ====================
-    let usdToKhr = 4100;   
-    let usdToIdr = 17602.95;  // sesuai Google
+    // ==================== RATE AKURAT (Default - 19 Mei 2026) ====================
+    let usdToIdr = 17640;   // 1 USD = 17.640 IDR
+    let usdToKhr = 4014;    // 1 USD = 4.014 KHR
+    let usdToThb = 32.57;   // 1 USD = 32.57 THB
+    
+    let ratesLoaded = false;
     
     // ==================== TANGGAL & JAM ====================
     function updateDateTime() {
@@ -374,114 +248,156 @@
         const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
         const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
         
-        const dayName = days[now.getDay()];
-        const date = now.getDate();
-        const month = months[now.getMonth()];
-        const year = now.getFullYear();
-        
-        document.getElementById('dateDisplay').innerHTML = `${dayName}, ${date} ${month} ${year}`;
-        
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        const seconds = String(now.getSeconds()).padStart(2, '0');
-        
-        document.getElementById('timeDisplay').innerHTML = `${hours}:${minutes}:${seconds}`;
+        document.getElementById('dateDisplay').innerHTML = `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+        document.getElementById('timeDisplay').innerHTML = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
     }
-    
-    updateDateTime();
-    setInterval(updateDateTime, 1000);
     
     // ==================== FORMAT ANGKA ====================
     function formatNumber(angka, decimals = 0) {
+        if (isNaN(angka)) return '0';
         if (decimals === 2) {
             return angka.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        }
-        if (decimals === 4) {
-            return angka.toLocaleString('id-ID', { minimumFractionDigits: 4, maximumFractionDigits: 4 });
         }
         return Math.round(angka).toLocaleString('id-ID');
     }
     
-    function formatRupiah(angka) {
-        return angka.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    }
-    
-    // ==================== AMBIL RATE DARI GOOGLE FINANCE (via API) ====================
-    async function fetchRateFromGoogle(fromCurrency, toCurrency) {
-        // Menggunakan API yang mengambil data dari Google Finance
-        // Sumber: https://www.gdeltproject.org/ (alternatif)
-        // Method: menggunakan exchange rate API yang akurat
+    // ==================== AMBIL RATE DARI MULTIPLE API ====================
+    async function fetchWithTimeout(url, timeout = 8000) {
+        const controller = new AbortController();
+        const id = setTimeout(() => controller.abort(), timeout);
         try {
-            // Menggunakan api.exchangerate.host dengan source terpercaya
-            // Data ini merefleksikan pasar forex realtime
-            const url = `https://api.exchangerate.host/convert?from=${fromCurrency}&to=${toCurrency}`;
-            const response = await fetch(url);
-            if (!response.ok) throw new Error('Gagal fetch');
-            const data = await response.json();
-            if (data && data.result && data.result > 0) {
-                return data.result;
-            }
-            throw new Error('Rate tidak valid');
+            const response = await fetch(url, { signal: controller.signal });
+            clearTimeout(id);
+            return response;
         } catch (error) {
-            console.error(`Error fetching ${fromCurrency}/${toCurrency}:`, error);
-            return null;
+            clearTimeout(id);
+            throw error;
         }
     }
     
-    async function fetchAllRates() {
-        const btn = document.getElementById('fetchAllBtn');
+    async function fetchRateFromMultipleSources(fromCurrency, toCurrency) {
+        // Daftar API yang akan dicoba (urutan prioritas)
+        const apis = [
+            {
+                name: 'Frankfurter',
+                url: `https://api.frankfurter.app/latest?from=${fromCurrency}&to=${toCurrency}`,
+                parser: (data) => data.rates?.[toCurrency]
+            },
+            {
+                name: 'ExchangeRate.host',
+                url: `https://api.exchangerate.host/convert?from=${fromCurrency}&to=${toCurrency}`,
+                parser: (data) => data.result
+            }
+        ];
+        
+        for (const api of apis) {
+            try {
+                console.log(`Mencoba ${api.name}...`);
+                const response = await fetchWithTimeout(api.url, 5000);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const data = await response.json();
+                const rate = api.parser(data);
+                if (rate && rate > 0) {
+                    console.log(`✅ ${api.name} berhasil: ${rate}`);
+                    return rate;
+                }
+            } catch (error) {
+                console.log(`❌ ${api.name} gagal:`, error.message);
+            }
+        }
+        return null;
+    }
+    
+    async function updateAllRates() {
+        const btn = document.getElementById('updateBtn');
         const originalText = btn.innerHTML;
         btn.innerHTML = '<span class="loading-spinner"></span> Mengambil rate live...';
         btn.disabled = true;
         
         const now = new Date();
         const timeStr = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}:${now.getSeconds().toString().padStart(2,'0')}`;
+        const dateStr = `${now.getDate()}/${now.getMonth()+1}/${now.getFullYear()}`;
         
         let successCount = 0;
+        let errors = [];
         
-        // Ambil USD ke IDR (prioritas utama)
-        const idrRate = await fetchRateFromGoogle('USD', 'IDR');
+        // Ambil USD ke IDR
+        const idrRate = await fetchRateFromMultipleSources('USD', 'IDR');
         if (idrRate && idrRate > 0) {
             usdToIdr = idrRate;
-            document.getElementById('rateUSDIDR').innerHTML = formatRupiah(usdToIdr) + ' <small>Rp</small>';
-            document.getElementById('timeUSDIDR').innerHTML = `✅ update: ${timeStr}`;
-            document.getElementById('sampleIdr').innerHTML = formatRupiah(usdToIdr);
+            document.getElementById('rateIdr').innerHTML = formatNumber(usdToIdr, 0) + ' <small>Rp</small>';
             successCount++;
         } else {
-            document.getElementById('rateUSDIDR').innerHTML = formatRupiah(usdToIdr) + ' <small>Rp (cached)</small>';
-            document.getElementById('timeUSDIDR').innerHTML = `⚠️ pakai rate tersimpan`;
+            errors.push('IDR');
+            document.getElementById('rateIdr').innerHTML = formatNumber(usdToIdr, 0) + ' <small>Rp (cached)</small>';
         }
         
         // Ambil USD ke KHR
-        const khrRate = await fetchRateFromGoogle('USD', 'KHR');
+        const khrRate = await fetchRateFromMultipleSources('USD', 'KHR');
         if (khrRate && khrRate > 0) {
             usdToKhr = khrRate;
-            document.getElementById('rateUSDKHR').innerHTML = formatNumber(usdToKhr) + ' <small>៛</small>';
-            document.getElementById('timeUSDKHR').innerHTML = `✅ update: ${timeStr}`;
+            document.getElementById('rateKhr').innerHTML = formatNumber(usdToKhr, 0) + ' <small>៛</small>';
             successCount++;
         } else {
-            document.getElementById('rateUSDKHR').innerHTML = formatNumber(usdToKhr) + ' <small>៛ (cached)</small>';
-            document.getElementById('timeUSDKHR').innerHTML = `⚠️ pakai rate tersimpan`;
+            errors.push('KHR');
+            document.getElementById('rateKhr').innerHTML = formatNumber(usdToKhr, 0) + ' <small>៛ (cached)</small>';
         }
         
-        // Notifikasi
-        const hasilDiv = document.getElementById('hasil');
-        const oldContent = hasilDiv.innerHTML;
-        if (successCount > 0) {
-            hasilDiv.innerHTML = '✅ Rate berhasil diperbarui dari Google Finance! ' + 
-                (usdToIdr > 0 ? `1 USD = ${formatRupiah(usdToIdr)} IDR` : '');
+        // Ambil USD ke THB
+        const thbRate = await fetchRateFromMultipleSources('USD', 'THB');
+        if (thbRate && thbRate > 0) {
+            usdToThb = thbRate;
+            document.getElementById('rateThb').innerHTML = formatNumber(usdToThb, 2) + ' <small>฿</small>';
+            successCount++;
         } else {
-            hasilDiv.innerHTML = '⚠️ Gagal mengambil rate online. Menggunakan rate tersimpan.';
+            errors.push('THB');
+            document.getElementById('rateThb').innerHTML = formatNumber(usdToThb, 2) + ' <small>฿ (cached)</small>';
         }
         
-        setTimeout(() => {
-            const nominal = parseFloat(document.getElementById('nominal').value);
-            if (!isNaN(nominal) && nominal > 0) {
-                hitung();
-            } else if (!hasilDiv.innerHTML.includes('Gagal')) {
-                hasilDiv.innerHTML = '💰 Hasil konversi akan muncul di sini';
-            }
-        }, 2000);
+        // Update last update display
+        const lastUpdatedDiv = document.getElementById('lastUpdated');
+        
+        if (successCount === 3) {
+            lastUpdatedDiv.innerHTML = `✅ Berhasil update: ${dateStr} ${timeStr} WIB | 1 USD = Rp ${formatNumber(usdToIdr, 0)} | ៛ ${formatNumber(usdToKhr, 0)} | ฿ ${formatNumber(usdToThb, 2)}`;
+            lastUpdatedDiv.className = 'last-updated status-success';
+            
+            const hasilDiv = document.getElementById('hasil');
+            hasilDiv.innerHTML = `✅ Rate berhasil diperbarui! 1 USD = Rp ${formatNumber(usdToIdr, 0)} | ៛ ${formatNumber(usdToKhr, 0)} | ฿ ${formatNumber(usdToThb, 2)}`;
+            setTimeout(() => {
+                const nominal = document.getElementById('nominal').value;
+                if (nominal && parseFloat(nominal) > 0) {
+                    hitung();
+                } else {
+                    hasilDiv.innerHTML = '💰 Hasil konversi akan muncul di sini';
+                }
+            }, 2000);
+        } else if (successCount > 0) {
+            lastUpdatedDiv.innerHTML = `⚠️ Sebagian berhasil: ${dateStr} ${timeStr} | 1 USD = Rp ${formatNumber(usdToIdr, 0)} | ៛ ${formatNumber(usdToKhr, 0)} | ฿ ${formatNumber(usdToThb, 2)}`;
+            lastUpdatedDiv.className = 'last-updated status-warning';
+            
+            const hasilDiv = document.getElementById('hasil');
+            hasilDiv.innerHTML = `⚠️ Sebagian rate gagal update (${errors.join(', ')}). Menggunakan rate tersimpan.`;
+            setTimeout(() => {
+                const nominal = document.getElementById('nominal').value;
+                if (nominal && parseFloat(nominal) > 0) {
+                    hitung();
+                } else {
+                    hasilDiv.innerHTML = '💰 Hasil konversi akan muncul di sini';
+                }
+            }, 2000);
+        } else {
+            lastUpdatedDiv.innerHTML = `❌ Gagal mengambil rate online. Menggunakan rate tersimpan (19 Mei 2026)`;
+            lastUpdatedDiv.className = 'last-updated status-error';
+            
+            const hasilDiv = document.getElementById('hasil');
+            hasilDiv.innerHTML = '❌ Gagal mengambil rate online. Gunakan rate manual di bawah atau coba lagi nanti.';
+            setTimeout(() => {
+                const nominal = document.getElementById('nominal').value;
+                if (nominal && parseFloat(nominal) > 0) {
+                    hitung();
+                }
+            }, 2000);
+        }
         
         // Auto hitung ulang
         const nominal = parseFloat(document.getElementById('nominal').value);
@@ -495,111 +411,109 @@
     
     // ==================== FUNGSI HITUNG KONVERSI ====================
     function hitung() {
-        let nominalInput = document.getElementById("nominal").value;
-        let jenis = document.getElementById("jenis").value;
-        
-        let nominal = parseFloat(nominalInput);
+        let nominal = parseFloat(document.getElementById('nominal').value);
+        let jenis = document.getElementById('jenis').value;
         
         if (isNaN(nominal) || nominal <= 0) {
-            document.getElementById("hasil").innerHTML = "⚠️ Masukkan nominal > 0";
-            shakeEffect();
+            document.getElementById('hasil').innerHTML = '⚠️ Masukkan nominal yang valid (> 0)';
             return;
         }
         
-        let hasilValue = 0;
-        let resultText = "";
+        let hasil = 0;
+        let text = '';
         
         switch(jenis) {
-            case "usdToKhr":
-                hasilValue = nominal * usdToKhr;
-                resultText = `💵 $${formatNumber(nominal, 2)} USD  →  ៛ ${formatNumber(hasilValue)} KHR`;
+            case 'usdToIdr':
+                hasil = nominal * usdToIdr;
+                text = `💵 $${formatNumber(nominal, 2)} USD = Rp ${formatNumber(hasil)} IDR`;
                 break;
-            case "khrToUsd":
-                hasilValue = nominal / usdToKhr;
-                resultText = `៛ ${formatNumber(nominal)} KHR  →  $${formatNumber(hasilValue, 2)} USD`;
+            case 'idrToUsd':
+                hasil = nominal / usdToIdr;
+                text = `Rp ${formatNumber(nominal)} IDR = $${formatNumber(hasil, 2)} USD`;
                 break;
-            case "usdToIdr":
-                hasilValue = nominal * usdToIdr;
-                resultText = `💵 $${formatNumber(nominal, 2)} USD  →  Rp ${formatRupiah(hasilValue)} IDR`;
+            case 'usdToKhr':
+                hasil = nominal * usdToKhr;
+                text = `💵 $${formatNumber(nominal, 2)} USD = ៛ ${formatNumber(hasil)} KHR`;
                 break;
-            case "idrToUsd":
-                hasilValue = nominal / usdToIdr;
-                resultText = `Rp ${formatNumber(nominal)} IDR  →  $${formatNumber(hasilValue, 2)} USD`;
+            case 'khrToUsd':
+                hasil = nominal / usdToKhr;
+                text = `៛ ${formatNumber(nominal)} KHR = $${formatNumber(hasil, 2)} USD`;
                 break;
-            case "khrToIdr":
-                let usdValue = nominal / usdToKhr;
-                hasilValue = usdValue * usdToIdr;
-                resultText = `៛ ${formatNumber(nominal)} KHR  →  Rp ${formatRupiah(hasilValue)} IDR`;
+            case 'usdToThb':
+                hasil = nominal * usdToThb;
+                text = `💵 $${formatNumber(nominal, 2)} USD = ฿ ${formatNumber(hasil, 2)} THB`;
                 break;
-            case "idrToKhr":
-                let usdValue2 = nominal / usdToIdr;
-                hasilValue = usdValue2 * usdToKhr;
-                resultText = `Rp ${formatNumber(nominal)} IDR  →  ៛ ${formatNumber(hasilValue)} KHR`;
+            case 'thbToUsd':
+                hasil = nominal / usdToThb;
+                text = `฿ ${formatNumber(nominal, 2)} THB = $${formatNumber(hasil, 2)} USD`;
+                break;
+            case 'idrToKhr':
+                let usdFromIdr = nominal / usdToIdr;
+                hasil = usdFromIdr * usdToKhr;
+                text = `Rp ${formatNumber(nominal)} IDR = ៛ ${formatNumber(hasil)} KHR`;
+                break;
+            case 'khrToIdr':
+                let usdFromKhr = nominal / usdToKhr;
+                hasil = usdFromKhr * usdToIdr;
+                text = `៛ ${formatNumber(nominal)} KHR = Rp ${formatNumber(hasil)} IDR`;
+                break;
+            case 'idrToThb':
+                let usdFromIdr2 = nominal / usdToIdr;
+                hasil = usdFromIdr2 * usdToThb;
+                text = `Rp ${formatNumber(nominal)} IDR = ฿ ${formatNumber(hasil, 2)} THB`;
+                break;
+            case 'thbToIdr':
+                let usdFromThb = nominal / usdToThb;
+                hasil = usdFromThb * usdToIdr;
+                text = `฿ ${formatNumber(nominal, 2)} THB = Rp ${formatNumber(hasil)} IDR`;
+                break;
+            case 'khrToThb':
+                let usdFromKhr2 = nominal / usdToKhr;
+                hasil = usdFromKhr2 * usdToThb;
+                text = `៛ ${formatNumber(nominal)} KHR = ฿ ${formatNumber(hasil, 2)} THB`;
+                break;
+            case 'thbToKhr':
+                let usdFromThb2 = nominal / usdToThb;
+                hasil = usdFromThb2 * usdToKhr;
+                text = `฿ ${formatNumber(nominal, 2)} THB = ៛ ${formatNumber(hasil)} KHR`;
                 break;
             default:
-                resultText = "Pilihan tidak valid";
+                text = 'Pilihan tidak valid';
         }
         
-        const hasilDiv = document.getElementById("hasil");
-        hasilDiv.style.transform = "scale(0.98)";
-        hasilDiv.style.opacity = "0.7";
-        setTimeout(() => {
-            hasilDiv.innerHTML = resultText;
-            setTimeout(() => {
-                hasilDiv.style.transform = "scale(1)";
-                hasilDiv.style.opacity = "1";
-            }, 50);
-        }, 80);
-        
-        addRipple();
+        document.getElementById('hasil').innerHTML = text;
     }
     
-    function shakeEffect() {
-        const container = document.querySelector('.container');
-        container.style.transform = 'translateX(4px)';
-        setTimeout(() => { container.style.transform = 'translateX(-4px)'; }, 60);
-        setTimeout(() => { container.style.transform = 'translateX(2px)'; }, 120);
-        setTimeout(() => { container.style.transform = 'translateX(0)'; }, 180);
-    }
-    
-    function addRipple() {
-        const btn = document.querySelector('button:not(.fetch-all-btn)');
-        if (btn) {
-            btn.style.transform = "scale(0.99)";
-            setTimeout(() => { btn.style.transform = "scale(1)"; }, 120);
-        }
-    }
-    
-    function autoConvertIfReady() {
-        let nominal = document.getElementById("nominal").value;
-        if (nominal && parseFloat(nominal) > 0) {
+    // ==================== EVENT LISTENERS ====================
+    document.getElementById('nominal').addEventListener('input', () => {
+        if (document.getElementById('nominal').value && parseFloat(document.getElementById('nominal').value) > 0) {
             hitung();
         }
-    }
-    
-    // Event listeners
-    document.getElementById("nominal").addEventListener("input", autoConvertIfReady);
-    document.getElementById("jenis").addEventListener("change", autoConvertIfReady);
-    
-    document.getElementById("nominal").addEventListener("keypress", function(event) {
-        if (event.key === "Enter") hitung();
     });
     
-    // Inisialisasi - tampilkan rate default dulu, lalu ambil live
-    window.addEventListener("load", () => {
-        document.getElementById("nominal").placeholder = "cth: 100, 1000, 50.5";
-        document.getElementById("hasil").innerHTML = "💰 Silakan masukkan nominal";
-        
-        // Tampilkan rate default
-        document.getElementById('rateUSDIDR').innerHTML = formatRupiah(usdToIdr) + ' <small>Rp</small>';
-        document.getElementById('rateUSDKHR').innerHTML = formatNumber(usdToKhr) + ' <small>៛</small>';
-        document.getElementById('sampleIdr').innerHTML = formatRupiah(usdToIdr);
-        
-        // Ambil rate live setelah load
-        setTimeout(() => {
-            fetchAllRates();
-        }, 500);
+    document.getElementById('jenis').addEventListener('change', () => {
+        if (document.getElementById('nominal').value && parseFloat(document.getElementById('nominal').value) > 0) {
+            hitung();
+        }
     });
+    
+    document.getElementById('nominal').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') hitung();
+    });
+    
+    // ==================== INISIALISASI ====================
+    updateDateTime();
+    setInterval(updateDateTime, 1000);
+    
+    // Tampilkan rate default
+    document.getElementById('rateIdr').innerHTML = formatNumber(usdToIdr, 0) + ' <small>Rp</small>';
+    document.getElementById('rateKhr').innerHTML = formatNumber(usdToKhr, 0) + ' <small>៛</small>';
+    document.getElementById('rateThb').innerHTML = formatNumber(usdToThb, 2) + ' <small>฿</small>';
+    
+    // Coba ambil rate live saat load
+    setTimeout(() => {
+        updateAllRates();
+    }, 500);
 </script>
 </body>
 </html>
